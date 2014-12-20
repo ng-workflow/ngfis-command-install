@@ -196,7 +196,10 @@ function syncFiles(componentName, meta, componentRoot, ignore){
       return result;
     }, []);
 
-    var mainList = [].concat(meta.main);
+    var mainList = [].concat(meta.main).map(function(item){
+      return item.replace(/\.\//, '');
+    });
+
     //sync files
     patterns.forEach(function (pattern) {
       //expand glob
