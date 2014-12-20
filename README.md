@@ -1,10 +1,8 @@
-ngfis-command-install
+`ngfis`的`bower`生态模块安装插件
 =====================
-
-`ngfis`的安装插件， 支持`bower`生态模块的安装。
+[![NPM Version](https://img.shields.io/npm/v/ngfis-command-install.svg?style=flat)](https://www.npmjs.org/package/ngfis-command-install)
 
 ### 为何不直接用`bower`？
-
   当前社区的模块质量良莠不齐，很多类库都不符合[`bower.json-spec`](https://github.com/bower/bower.json-spec),的规范，仓库里面经常有很多源码垃圾文件，甚至很多模块安装之后不可用或者根本安装不上。
 
 @fouber 也曾多次提到「模块生态及版本管理是一个细思恐极的问题」， 所以[`scrat`](http://scrat-team.github.io/#!/components)选择的方案是**「自建高质量的小范围生态」**。
@@ -96,3 +94,5 @@ overrides | Object | key为类库名称， value为配置项， 包括`mapping`,
 }
 
 ```
+**运行效果：**
+![snapshot](snapshot.png)
