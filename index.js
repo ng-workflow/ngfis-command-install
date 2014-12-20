@@ -146,7 +146,7 @@ function simplify(installed, projectMeta, componentRoot){
         console.log('[Installer] simplify %s ...', componentName);
         //merge meta: overrides -> buildinMeta -> own bower
         var meta = _.assign(item.pkgMeta, projectMeta.overrides && projectMeta.overrides[componentName]);
-        syncFiles(key, meta, componentRoot);
+        syncFiles(key, meta, componentRoot, ignore);
       }
     }
   }
@@ -158,8 +158,9 @@ function simplify(installed, projectMeta, componentRoot){
  * @param {String} componentName The name of dep component
  * @param {Object} meta The component meta
  * @param {String} componentRoot The component install path (full path)
+ * @param {Array} [ignore] The ignoreDependencies
  */
-function syncFiles(componentName, meta, componentRoot){
+function syncFiles(componentName, meta, componentRoot, ignore){
   var srcDir = path.join(componentRoot, componentName);
   var targetDir = path.join(componentRoot, '.' + meta.name);
   var mapping = meta.mapping;
@@ -238,6 +239,9 @@ function syncFiles(componentName, meta, componentRoot){
     //write meta
     meta._installedTime = new Date().getTime();
     meta = _.omit(meta, function(v, k){return k.indexOf('_')==0;});
+    if(meta.dependencies){
+      meta.dependencies = _.omit(meta.dependencies, ignore);
+    }
     fs.writeJsonSync(path.join(targetDir, 'bower.json'), meta);
 
     //remove tmpDir
