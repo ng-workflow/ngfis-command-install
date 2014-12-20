@@ -66,7 +66,7 @@ exports.register = function (commander){
       var installer = bower.commands.install(repo, bowerOptions, bowerConfigs);
       installer.on('log', function (data){
         var endpoint = data.data.endpoint;
-        var targetMsg = data.data.endpoint ? util.format('%s#%s', endpoint.name, endpoint.target) : '';
+        var targetMsg = endpoint ? util.format('%s#%s', endpoint.name || endpoint.source, endpoint.target) : '';
         var str = util.format('   %s  %s %s', targetMsg, data.id, data.message);
         console.log(str);
       });
@@ -142,7 +142,7 @@ function simplify(installed, projectMeta, componentRoot){
         fs.removeSync(path.join(componentRoot, key));
       }else{
         var item = installed[key];
-        var componentName = item.endpoint.source;
+        var componentName = key; //item.endpoint.source;
         console.log('[Installer] simplify %s ...', componentName);
         //merge meta: overrides -> buildinMeta -> own bower
         var meta = _.assign(item.pkgMeta, projectMeta.overrides && projectMeta.overrides[componentName]);
@@ -195,7 +195,7 @@ function syncFiles(componentName, meta, componentRoot){
       return result;
     }, []);
 
-    var mainList = [];
+    var mainList = [].concat(meta.main);
     //sync files
     patterns.forEach(function (pattern) {
       //expand glob
@@ -209,11 +209,17 @@ function syncFiles(componentName, meta, componentRoot){
           fs.copySync(path.join(srcDir, sourceFile), path.join(targetDir, targetFile));
         }
         //change main file to new path
-        if(meta.main) {
-          var index = meta.main.indexOf(sourceFile);
+        if(mainList.length > 0) {
+          var index = mainList.indexOf(sourceFile);
           if (index !== -1) {
             mainList[index] = targetFile;
           }
+        }
+
+        //change componentMain file to new path
+        //componentMain is use when your have multi main files.
+        if(meta.componentMain && meta.componentMain === sourceFile) {
+          meta.componentMain = targetFile;
         }
       });
     });

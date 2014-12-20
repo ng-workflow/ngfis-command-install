@@ -48,6 +48,7 @@ ignoreDependencies | Array | 忽略的依赖，如需要去掉`bootstrap`默认�
 overrides | Object | key为类库名称， value为配置项， 包括`mapping`, `main`, `exports`等
 - overrides.mapping | Array | 支持`字符串`和[`grunt.file的glob配置格式`](http://gruntjs.com/configuring-tasks#globbing-patterns)
 - overrides.main | Array/String | 覆盖原`main`属性，如`bootstrap`只需要第一个`css`
+- overrides.componentMain | String | 当`main`为数组的时候，需指定一个文件为主文件(release分析别名时用)
 - overrides.exports | String | `ngfis`自动包裹`define`时用到
 
 配置的优先级： `项目bower.json配置` > `插件内置bower-meta.js` > `模块本身的bower.json配置`
