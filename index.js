@@ -15,7 +15,7 @@ exports.desc = 'install bower modules';
 exports.register = function (commander){
   commander
     .option('-c, --clean', 'clean cached packages')
-    .option('-d, --directory [path]', 'set install directory, default: `component_modules`', 'component_modules')
+    .option('-d, --directory [path]', 'set install directory, default: `component_modules`')
     .option('--dev', 'also install project devDependencies')
     .option('--no-save', 'do not save installed packages into the project dependencies')
     .option('--save-dev', 'save installed packages into the project devDependencies')
@@ -28,9 +28,16 @@ exports.register = function (commander){
         bower.commands.cache.clean();
       }
 
+      //read conf from fis-conf
+      var conf = fis.config.get('settings.command.install') || {directory: 'component_modules'};
+
+      //count paths
       var root = findRoot('fis-conf.js') || findRoot('bower.json');
-      var componentRoot = path.join(root, options.directory);
-      var projectMeta = getProjectMeta(root, options.directory);
+      var directory = options.directory || conf.directory;
+      var componentRoot = path.join(root, directory);
+
+      //read project's component meta
+      var projectMeta = getProjectMeta(root, directory);
       projectMeta.overrides = _.defaults(projectMeta.overrides || {}, require('./bower-meta'));
 
       //change `z=zepto#1.0.0` to 'zepto#1.0.0'
@@ -49,7 +56,7 @@ exports.register = function (commander){
       var bowerConfigs = {
         cwd: root,
         //Notify: if use full path, it will block.
-        directory: options.directory,
+        directory: directory,
         interactive: true
       };
 

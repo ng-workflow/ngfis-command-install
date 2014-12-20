@@ -26,7 +26,7 @@
 
 参数 | 描述
 ------------ | -------------
--d, --directory [path] | 类库安装目录， 默认为`component_modules`
+-d, --directory [path] | 类库安装目录， 默认为`component_modules`，<br/>`fis-conf`配置项:`settings.command.install.directory`
 -c, --clean | 清除`bower`的cache缓存
 --dev | 安装devDependencies开发模块
 --no-save | 不保存到`bower.json` (跟`bower`不同，默认会保存)
