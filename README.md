@@ -51,7 +51,11 @@ overrides | Object | key为类库名称， value为配置项， 包括`mapping`,
 - overrides.componentMain | String | 当`main`为数组的时候，需指定一个文件为主文件(release分析别名时用)
 - overrides.exports | String | `ngfis`自动包裹`define`时用到
 
-配置的优先级： `项目bower.json配置` > `插件内置bower-meta.js` > `模块本身的bower.json配置`
+**配置的优先级：** `项目bower.json配置` > `插件内置bower-meta.js` > `模块本身的bower.json配置`
+
+目前内置的`mapping`很简单，
+试过`zepto ui-router angular angular-bootstrap bootstrap`等几个类库都可以支持。
+如有其他需求， 可以提`issue`， 我会内置进去。
 
 ### 示例
 ```
