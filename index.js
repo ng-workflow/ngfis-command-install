@@ -185,10 +185,17 @@ function syncFiles(componentName, meta, componentRoot, ignore){
     var defaultPattens = ['!**/*.min.*', '!**/*.md'];
     var patterns = mapping.reduce(function (result, item) {
       if (typeof item === 'string') {
-        result.push({src: [item].concat(defaultPattens), dest: item, cwd: './'});
+        result.push({
+          cwd: './',
+          src: [item].concat(defaultPattens),
+          //dest: item
+        });
       } else if (item.src) {
         item.cwd = item.cwd || './';
         item.src = [].concat(item.src, defaultPattens);
+        if(typeof item.renameFn === 'string'){
+          item.renameFn = new Function('targetFile, pattern', item.renameFn);
+        }
         result.push(item);
       } else {
         console.warn('\tunknown mapping patten: ' + JSON.stringify(item));
@@ -196,7 +203,7 @@ function syncFiles(componentName, meta, componentRoot, ignore){
       return result;
     }, []);
 
-    var mainList = [].concat(meta.main).map(function(item){
+    var mainList = [].concat(meta.main || []).map(function(item){
       return item.replace(/\.\//, '');
     });
 
@@ -209,6 +216,11 @@ function syncFiles(componentName, meta, componentRoot, ignore){
         var sourceFile = path.join(pattern.cwd, file).replace(/\\/g,'/');
         var targetFile = file.replace(/\\/g,'/');
         if (fs.statSync(path.join(srcDir, sourceFile)).isFile()) {
+          if(pattern.rename){
+            targetFile = pattern.rename;
+          }else if(pattern.renameFn){
+            targetFile = pattern.renameFn(targetFile, pattern);
+          }
           console.log('    copy %s -> %s', sourceFile, targetFile);
           fs.copySync(path.join(srcDir, sourceFile), path.join(targetDir, targetFile));
         }
